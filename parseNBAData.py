@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 import numpy as np
 import csv
 
@@ -34,6 +35,3 @@ with open('./small.tsv', 'rb') as tsvin:
                 currentGameId = line[0]
                 parsedData[currentGameId] = GameData(currentGameId, [dataLine])
 
-        
-print (parsedData[parsedData.keys()[0]].data)
-        
