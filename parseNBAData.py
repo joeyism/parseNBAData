@@ -1,4 +1,5 @@
 #!/usr/bin/python2.7
+import sys
 import numpy as np
 import csv
 
@@ -14,9 +15,15 @@ def get_sec(s):
     l = s.split(':')
     return int(l[0]) * 3600 + int(l[1]) * 60 + int(l[2])
 
+filename = ""
+try:
+    filename = sys.argv[1]
+except IndexError:
+    filename = './data.tsv'
+
 textData = []
 parsedData = {}
-with open('./small.tsv', 'rb') as tsvin:
+with open(filename, 'rb') as tsvin:
     tsvin = csv.reader(tsvin, delimiter = "\t")
     currentGameId = ""
     for i, line in enumerate(tsvin):
@@ -34,6 +41,4 @@ with open('./small.tsv', 'rb') as tsvin:
                 currentGameId = line[0]
                 parsedData[currentGameId] = GameData(currentGameId, [dataLine])
 
-        
-print (parsedData[parsedData.keys()[0]].data)
         
