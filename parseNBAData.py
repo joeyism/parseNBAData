@@ -17,7 +17,7 @@ def get_sec(s):
 
 textData = []
 parsedData = {}
-with open('./small.tsv', 'rb') as tsvin:
+with open('./data.tsv', 'rb') as tsvin:
     tsvin = csv.reader(tsvin, delimiter = "\t")
     currentGameId = ""
     for i, line in enumerate(tsvin):
@@ -35,3 +35,4 @@ with open('./small.tsv', 'rb') as tsvin:
                 currentGameId = line[0]
                 parsedData[currentGameId] = GameData(currentGameId, [dataLine])
 
+print(parsedData[parsedData.keys()[0]].data)
