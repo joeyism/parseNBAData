@@ -53,7 +53,7 @@ class userGameData:
         return ret
 
 def createPlaysTable(cur):
-    execString = "CREATE TABLE plays (  game_id varchar(20) NOT NULL, play_no int NOT NULL, time_left varchar(20) NOT NULL, team varchar(3) NOT NULL, first_player varchar(20) NOT NULL, first_action varchar(20) NULL, first_stat varchar(20) NULL, second_player varchar(20) NULL, second_action varchar(20) NULL, second_stat varchar(20) NULL )"
+    execString = "CREATE TABLE plays (  game_id varchar(50) NOT NULL, play_no int NOT NULL, time_left varchar(50) NOT NULL, team varchar(3) NOT NULL, first_player varchar(50) NOT NULL, first_action varchar(50) NULL, first_stat varchar(50) NULL, second_player varchar(50) NULL, second_action varchar(50) NULL, second_stat varchar(50) NULL )"
     print(execString)
     try:
         cur.execute(execString)
@@ -65,12 +65,12 @@ def createPlaysTable(cur):
 def insertIntoPlaysTable(cur, databaseLine):
     execString = "INSERT INTO plays VALUES ("
     for i, cell in enumerate(databaseLine):
-        execString += """ '%s' """ % (cell)
+        execString += """ %s """
         if i < len(databaseLine)-1:
             execString += ","
     execString += ")"
     try: 
-        cur.execute(execString)
+        cur.execute(execString, (databaseLine[0], databaseLine[1], databaseLine[2], databaseLine[3], databaseLine[4], databaseLine[5], databaseLine[6], databaseLine[7], databaseLine[8], databaseLine[9]))
     except psycopg2.Error as e:
         print e.pgerror
         pass
@@ -88,6 +88,7 @@ def GetConfigString(section):
             print("exception on %s!" % option)
             dict1[option] = None
         ret = ret + option + "='" + dict1[option] +"' "
+    print(ret)
     return ret
 
 def get_sec(s):
@@ -130,6 +131,7 @@ else:
     parsedData = {}
     try:
         conn = psycopg2.connect(GetConfigString("database"))
+        conn.autocommit = True
     except:
         print "I am unable to connect to the database"
 
@@ -140,6 +142,7 @@ else:
         tsvin = csv.reader(tsvin, delimiter = "\t")
         currentGameId = ""
         for i, line in enumerate(tsvin):
+            print("Inputing line "+str(i))
             if i > 1 & line[3].find("End of") != 0:
                 databaseLine = parseLine(line)
                 insertIntoPlaysTable(cur, databaseLine) 
